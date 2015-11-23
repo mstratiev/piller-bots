@@ -48,17 +48,18 @@ var refreshBots = function(interval){
 var a =  createBot(50,50, maxX, maxY);
 var b =  createBot(30,30, maxX, maxY).changeDirection(200);
 
-var c =  createBot(radnom(200,400),radnom(200,400), maxX, maxY);
-var d =  createBot(radnom(200,400),radnom(200,400), maxX, maxY);
-var e =  createBot(radnom(200,400),radnom(200,400), maxX, maxY);
-var f =  createBot(radnom(200,400),radnom(200,400), maxX, maxY);
+var c =  createBot(radnom(200,400),radnom(200,400), maxX, maxY).changeDirection(radnom(0,360));
+var d =  createBot(radnom(200,400),radnom(200,400), maxX, maxY).changeDirection(radnom(0,360));
+var e =  createBot(radnom(200,400),radnom(200,400), maxX, maxY).changeDirection(radnom(0,360));
+var f =  createBot(radnom(200,400),radnom(200,400), maxX, maxY).changeDirection(radnom(0,360));
 print(bots)
-
-a.intstruct(a.fear);
-b.intstruct(b.fear);
-c.intstruct(b.fear);
-d.intstruct(b.fear);
-e.intstruct(b.fear);
-f.intstruct(b.fear);
+var aiSelf = a.behaviour.self.normal;
+var aiOthers = a.behaviour.others.fear;
+a.intstruct(aiSelf, aiOthers);
+b.intstruct(aiSelf, aiOthers);
+c.intstruct(aiSelf, aiOthers);
+d.intstruct(aiSelf, aiOthers);
+e.intstruct(aiSelf, aiOthers);
+f.intstruct(aiSelf, aiOthers);
 
 refreshBots(10);

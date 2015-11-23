@@ -37,7 +37,7 @@ var bots = [];
 var MOVE_INTERVAL = 100;
 
 var Bot = (function() {
-    function Bot(x, y, maxX, maxY, name, i) {
+    function Bot(x, y, maxX, maxY, name) {
         this.id = botId++;
         this.name = name || null;
         this.x = x || 0;
@@ -53,15 +53,22 @@ var Bot = (function() {
         //light is white, green, blue, red
         this._direction = 10;
         //dir is an angle from 0 to 360
-        this.instructions = i || {};
+        this.instructionsSelf = null;
+        this.instructionsOthers = null;
         bots.push(this);
         return this
     };
-    Bot.prototype.fear = {
-        move: 5,
-        changeDirection: true,
-        blink: false,
-        borders: true
+    Bot.prototype.behaviour = {
+        self: { normal:{
+                move: 5,
+                blink: false,
+                borders: true}
+        },
+        others: {
+            fear: {
+                changeDirection: true
+            }
+        }
     };
 
     Bot.prototype.goMove = function() {
@@ -180,10 +187,7 @@ var Bot = (function() {
     Bot.prototype.deflectBorders = function() {
         var self = this;
         var iterate = function() {
-            if ((self.x <= (0 + self._radius + 1)) 
-                || (self.y <= (0 + self._radius + 1)) 
-                || (self.x >= (self._maxX - self._radius - 10)) 
-                || (self.y >= (self._maxY - self._radius - 10))) {
+            if ((self.x <= (0 + self._radius + 1)) || (self.y <= (0 + self._radius + 1)) || (self.x >= (self._maxX - self._radius - 10)) || (self.y >= (self._maxY - self._radius - 10))) {
                 self.changeDirection(180);
             }
             setTimeout(iterate, MOVE_INTERVAL);
@@ -192,26 +196,28 @@ var Bot = (function() {
     };
 
 
-    Bot.prototype.intstruct = function(i) {
-        this.instructions = i;
+    Bot.prototype.intstruct = function(i, i2) {
+        this.instructionsSelf = i;
+        this.instructionsOthers= i2;
         this.behave();
     };
 
     Bot.prototype.behave = function() {
-        var ai = this.instructions;
+        var aiOthers = this.instructionsOthers;
+        var aiSelf = this.instructionsSelf;
         var self = this;
-        if (!ai) {
+        if (!aiOthers || !aiSelf) {
             return
         }
-        if (ai.move) {
-            self.move(ai.move);
+        if (aiSelf.move) {
+            self.move(aiSelf.move);
         }
-        if (ai.changeDirection) {
+        if (aiOthers.changeDirection) {
             self.checkForOthers(function() {
-                self.changeDirection(radnom(1, 360))
+                self.changeDirection(radnom(-90, +180))
             })
         }
-        if (ai.borders) {
+        if (aiSelf.borders) {
             self.deflectBorders();
         }
     };
