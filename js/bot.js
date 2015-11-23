@@ -50,6 +50,7 @@ var Bot = (function() {
         //dir is an angle from 0 to 360
         this.instructions = i || {};
         bots.push(this);
+        return this
     };
 
     Bot.prototype.goMove = function() {
@@ -64,7 +65,6 @@ var Bot = (function() {
         var iterate = function() {
             self.x += self.dx;
             self.y += self.dy;
-            print(Math.floor(self.x) + ' ' + Math.floor(self.y));
             setTimeout(iterate, MOVE_INTERVAL)
         };
 

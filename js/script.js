@@ -20,6 +20,7 @@ var createBot = function(x,y){
 
 	botsB.push(b);
 	b.appendTo($content);
+	return B;
 };
 
 var displace = function(bot,x,y){
@@ -43,8 +44,9 @@ var refreshBots = function(interval){
 	iterate();
 };
 
-// createBot(0,0);
+var a =  createBot(0,0);
 // print(bots[0])
-// bots[0].move(2);
+//console.log(a)
+//a.move(2);
 // bots[0].changeDirection(270);
-// refreshBots(10);
+//refreshBots(10);
