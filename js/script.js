@@ -7,15 +7,16 @@ var $botBall = $('<div />').addClass('bot');
 
 var botsB = [];
 
-var CENTER_X = 500, CENTER_Y = 500;
-var createBot = function(x,y){
+var maxX = $content.height();
+var maxY = $content.width();
+var createBot = function(x,y,maxX,maxY){
 
-	var B = new Bot(x,y);
+	var B = new Bot(x,y,maxX,maxY);
 	var b = $botBall.clone().attr({
 		'data-id': B
 	}).css({
-		'top': x+CENTER_X,
-		'left': y+CENTER_Y
+		'top': x,
+		'left': y
 	});
 
 	botsB.push(b);
@@ -25,8 +26,8 @@ var createBot = function(x,y){
 
 var displace = function(bot,x,y){
 	bot.css({
-		'top': x + CENTER_X,
-		'left': y + CENTER_Y
+		'top': x,
+		'left': y
 	})
 
 };
@@ -44,9 +45,20 @@ var refreshBots = function(interval){
 	iterate();
 };
 
-var a =  createBot(0,0);
-// print(bots[0])
-//console.log(a)
-//a.move(2);
-// bots[0].changeDirection(270);
-//refreshBots(10);
+var a =  createBot(50,50, maxX, maxY);
+var b =  createBot(30,30, maxX, maxY).changeDirection(200);
+
+var c =  createBot(radnom(200,400),radnom(200,400), maxX, maxY);
+var d =  createBot(radnom(200,400),radnom(200,400), maxX, maxY);
+var e =  createBot(radnom(200,400),radnom(200,400), maxX, maxY);
+var f =  createBot(radnom(200,400),radnom(200,400), maxX, maxY);
+print(bots)
+
+a.intstruct(a.fear);
+b.intstruct(b.fear);
+c.intstruct(b.fear);
+d.intstruct(b.fear);
+e.intstruct(b.fear);
+f.intstruct(b.fear);
+
+refreshBots(10);
