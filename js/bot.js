@@ -55,18 +55,26 @@ var Bot = (function() {
         //dir is an angle from 0 to 360
         this.instructionsSelf = null;
         this.instructionsOthers = null;
+        this.bools = {
+            move: false
+        };
         bots.push(this);
         return this
     };
     Bot.prototype.behaviour = {
-        self: { normal:{
+        self: {
+            normal: {
                 move: 5,
                 blink: false,
-                borders: true}
+                borders: true
+            }
         },
         others: {
             fear: {
-                changeDirection: true
+                changeDirection: 'run'
+            },
+            follow: {
+                changeDirection: 'follow'
             }
         }
     };
@@ -75,35 +83,66 @@ var Bot = (function() {
         this.dx = sin(angToRad(this._direction)) * this._speed;
         this.dy = cos(angToRad(this._direction)) * this._speed;
         var self = this;
-        if (!this._speed) {
-            return
-        }
         var iterate = function() {
             self.x += self.dx;
             self.y += self.dy;
+            if(!self.bools.move){
+                return
+            }
             setTimeout(iterate, MOVE_INTERVAL)
         };
-        iterate(this);
+        iterate(self);
     };
 
     Bot.prototype.move = function(arg, fun) {
         switch (true) {
             case Number.isInteger(arg):
                 this._speed = arg;
-                this.goMove();
+                if (this.bools.move) {
+                    return
+                } else {
+                    this.bools.move = true;
+                    this.goMove();
+                    return
+                }
+
                 break;
             case (arg === "yes" || arg === true):
-                this._speed = 1;
-                this.goMove();
+                this._speed = this._speed || 1;
+                if (this.bools.move) {
+                    return
+                } else {
+                    this.bools.move = true;
+                    this.goMove();
+                    return
+                }
+
                 break;
             case (arg === 'no' || arg === false || arg == 'undefined'):
                 this._speed = 0;
-                this.goMove();
+                    this.bools.move = false;
+                    this.goMove();
+                    return
+
                 break;
         };
         if (fun) {
             return fun
         }
+    };
+
+    Bot.prototype.stop = function() {
+        var self = this;
+        self.move(false);
+    };
+
+    Bot.prototype.wait = function(sec) {
+        var self = this;
+        self.stop();
+        setTimeout(function() {
+            self.behave()
+        }, sec);
+        return this;
     };
 
     Bot.prototype.light = function(arg) {
@@ -178,7 +217,7 @@ var Bot = (function() {
             var bool = self.detectOthers();
             if (bool) {
                 fun(bool);
-            }
+            };
             setTimeout(iterate, MOVE_INTERVAL);
         };
         iterate();
@@ -198,8 +237,9 @@ var Bot = (function() {
 
     Bot.prototype.intstruct = function(i, i2) {
         this.instructionsSelf = i;
-        this.instructionsOthers= i2;
+        this.instructionsOthers = i2;
         this.behave();
+        return this
     };
 
     Bot.prototype.behave = function() {
@@ -212,9 +252,13 @@ var Bot = (function() {
         if (aiSelf.move) {
             self.move(aiSelf.move);
         }
-        if (aiOthers.changeDirection) {
-            self.checkForOthers(function() {
+        if (aiOthers.changeDirection == 'run') {
+            self.checkForOthers(function(other) {
                 self.changeDirection(radnom(-90, +180))
+            })
+        } else if (aiOthers.changeDirection == 'follow') {
+            self.checkForOthers(function(other) {
+                self.changeDirection(360)
             })
         }
         if (aiSelf.borders) {

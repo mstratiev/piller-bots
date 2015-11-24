@@ -60,6 +60,7 @@ b.intstruct(aiSelf, aiOthers);
 c.intstruct(aiSelf, aiOthers);
 d.intstruct(aiSelf, aiOthers);
 e.intstruct(aiSelf, aiOthers);
+e.wait(1000);
 f.intstruct(aiSelf, aiOthers);
 
 refreshBots(10);
