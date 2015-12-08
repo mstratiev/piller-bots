@@ -44,7 +44,7 @@ var Bot = (function() {
         this.y = y || 0;
         this.dx = 0;
         this.dy = 0;
-        this._radius = 10;
+        this._radius = 20;
         this._color = null;
         this._light = null;
         this._speed = 1;
@@ -86,7 +86,7 @@ var Bot = (function() {
         var iterate = function() {
             self.x += self.dx;
             self.y += self.dy;
-            if(!self.bools.move){
+            if (!self.bools.move) {
                 return
             }
             setTimeout(iterate, MOVE_INTERVAL)
@@ -119,10 +119,9 @@ var Bot = (function() {
 
                 break;
             case (arg === 'no' || arg === false || arg == 'undefined'):
-                this._speed = 0;
-                    this.bools.move = false;
-                    this.goMove();
-                    return
+                this.bools.move = false;
+                this.goMove();
+                return
 
                 break;
         };
@@ -203,7 +202,7 @@ var Bot = (function() {
 
     Bot.prototype.detectOthers = function(radius) {
         //if 0 -> "bumps"
-        radius = radius || 10;
+        radius = radius || 0;
         radius += this._radius;
         var other = this.inRadius(radius);
         return other;
@@ -226,8 +225,8 @@ var Bot = (function() {
     Bot.prototype.deflectBorders = function() {
         var self = this;
         var iterate = function() {
-            if ((self.x <= (0 + self._radius + 1)) || (self.y <= (0 + self._radius + 1)) || (self.x >= (self._maxX - self._radius - 10)) || (self.y >= (self._maxY - self._radius - 10))) {
-                self.changeDirection(180);
+            if ((self.x <= (0 + self._radius + 10)) || (self.y <= (0 + self._radius + 10)) || (self.x >= (self._maxX - self._radius - 10)) || (self.y >= (self._maxY - self._radius - 10))) {
+                self.changeDirection(radnom(-90, +180));
             }
             setTimeout(iterate, MOVE_INTERVAL);
         };

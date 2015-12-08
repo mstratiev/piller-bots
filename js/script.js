@@ -1,7 +1,5 @@
 'use strict'
 
-
-
 var $content = $('#content');
 var $botBall = $('<div />').addClass('bot');
 
@@ -15,6 +13,8 @@ var createBot = function(x,y,maxX,maxY){
 	var b = $botBall.clone().attr({
 		'data-id': B
 	}).css({
+		'width':B._radius,
+		'height': B._radius,
 		'top': x,
 		'left': y
 	});
@@ -46,7 +46,7 @@ var refreshBots = function(interval){
 };
 
 var a =  createBot(50,50, maxX, maxY);
-var b =  createBot(30,30, maxX, maxY).changeDirection(200);
+var b =  createBot(100,130, maxX, maxY).changeDirection(200);
 
 var c =  createBot(radnom(200,400),radnom(200,400), maxX, maxY).changeDirection(radnom(0,360));
 var d =  createBot(radnom(200,400),radnom(200,400), maxX, maxY).changeDirection(radnom(0,360));
@@ -61,6 +61,7 @@ c.intstruct(aiSelf, aiOthers);
 d.intstruct(aiSelf, aiOthers);
 e.intstruct(aiSelf, aiOthers);
 e.wait(1000);
+console.log(e)
 f.intstruct(aiSelf, aiOthers);
 
 refreshBots(10);
